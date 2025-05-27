@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { GoogleLogoIcon } from "@phosphor-icons/react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -48,7 +49,7 @@ export default function LoginForm() {
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof loginSchema>) {
+	async function handleSubmit(values: z.infer<typeof loginSchema>) {
 		await authClient.signIn.email(
 			{
 				email: values.email,
@@ -66,10 +67,18 @@ export default function LoginForm() {
 			},
 		);
 	}
+
+	async function handleGoogleLogin() {
+		await authClient.signIn.social({
+			provider: "google",
+			callbackURL: "/dashboard",
+		});
+	}
+
 	return (
 		<Card>
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+				<form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
 					<CardHeader>
 						<CardTitle>Login</CardTitle>
 						<CardDescription>Faça login para continuar.</CardDescription>
@@ -107,7 +116,7 @@ export default function LoginForm() {
 							)}
 						/>
 					</CardContent>
-					<CardFooter>
+					<CardFooter className="flex flex-col space-y-2">
 						<Button
 							type="submit"
 							className="w-full cursor-pointer"
@@ -118,6 +127,15 @@ export default function LoginForm() {
 							) : (
 								"Entrar"
 							)}
+						</Button>
+						<Button
+							type="button"
+							onClick={handleGoogleLogin}
+							variant="outline"
+							className="w-full cursor-pointer"
+						>
+							<GoogleLogoIcon weight="bold" size={32} />
+							Entrar com Google
 						</Button>
 					</CardFooter>
 				</form>
