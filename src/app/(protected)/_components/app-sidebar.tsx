@@ -7,6 +7,7 @@ import {
 	UserRound,
 } from "lucide-react";
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -57,6 +58,7 @@ const items = [
 
 export function AppSidebar() {
 	const router = useRouter();
+	const session = authClient.useSession();
 
 	const handleSignOut = async () => {
 		await authClient.signOut({
@@ -102,7 +104,17 @@ export function AppSidebar() {
 					<SidebarMenuItem>
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button>Clínica</Button>
+								<SidebarMenuButton size="lg">
+									<Avatar>
+										<AvatarFallback>V</AvatarFallback>
+									</Avatar>
+									<div>
+										<p className="text-sm">{session.data?.user.clinic.name}</p>
+										<p className="text-xs text-muted-foreground">
+											{session.data?.user.email}
+										</p>
+									</div>
+								</SidebarMenuButton>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent>
 								<DropdownMenuItem onClick={handleSignOut}>
