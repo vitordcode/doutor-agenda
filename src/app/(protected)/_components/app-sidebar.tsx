@@ -30,7 +30,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 // Menu items.
 const items = [
@@ -59,6 +59,7 @@ const items = [
 export function AppSidebar() {
 	const router = useRouter();
 	const session = authClient.useSession();
+	const pathname = usePathname();
 
 	const handleSignOut = async () => {
 		await authClient.signOut({
@@ -87,7 +88,11 @@ export function AppSidebar() {
 						<SidebarMenu>
 							{items.map((item) => (
 								<SidebarMenuItem key={item.title}>
-									<SidebarMenuButton asChild>
+									<SidebarMenuButton
+										className="data-[active=true]:bg-primary-foreground data-[active=true]:text-primary hover:bg-primary-foreground"
+										isActive={pathname === item.url}
+										asChild
+									>
 										<Link href={item.url}>
 											<item.icon />
 											<span>{item.title}</span>
